@@ -1,3 +1,62 @@
 <html>
   <h1>haha</h1>
+  <h2>
+    # Task 3.3
+
+class Hash:
+    def __init__(self):
+        self.array = [ ['',''] for i in range(31) ] # creates hash table
+
+    def hash(self, k): # hash algorithm
+        address = int(k) % 31
+        return address
+
+    def add(self, membership, name): 
+        address = self.hash(membership)
+        if self.array[address][0] == '': # adds record to hash table if not occupied
+            self.array[address][0] = membership
+            self.array[address][1] = name
+        else: # rehashes if space is occupied
+            address = (2 ** int(membership)) % 31
+            if self.array[address][0] == '':
+                self.array[address][0] = membership
+                self.array[address][1] = name
+            else:
+                print("Even after rehashing, still occupied.")
+    
+    def display(self): # displays contents of the table
+        print(f"{'Address':<8}{'Membership':<14}{'Name':<7}")
+        print("-"*29)
+        for i in range(31):
+            if self.array[i][0] == '':
+                continue
+            else:
+                print(f"{i:<8}{self.array[i][0]:<10}{self.array[i][1]:<7}")
+
+    # Task 3.2 
+    # implement lookup for hash table
+
+    def search(self, membershipNo):
+        address = self.hash(membershipNo)
+        if int(self.array[address][0]) == int(membershipNo):  # Check if the address matches the membership number
+            return self.array[address][1]
+        else:
+            for i in range(1, 31):  # Linear probing to search for the correct membership number
+                rehash = (address + i) % 31
+                if str(self.array[rehash][0]) == str(membershipNo):
+                    return self.array[rehash][1]
+            return "Not found"
+
+# main
+with open('IDs.txt', 'r') as file:
+    hash = Hash()
+    for line in file:
+        line = line.strip() # rids of blank spaces
+        membershipNo, name = line.split(',')
+        hash.add(membershipNo, name)
+# file automatically closes
+hash.display()
+print()
+print(hash.search("666"))
+  </h2>
 </html>
